@@ -22,7 +22,7 @@ namespace game
 
     void VoxelWorld::clear()
     {
-        enumeratekt(chunks, ChunkCoord, key, Chunk*, chunk,
+        enumerate(chunks, Chunk*, chunk,
         {
             delete chunk;
         });
@@ -95,7 +95,12 @@ namespace game
 
     void VoxelWorld::unloadDistantChunks(const ChunkCoord &playerChunk)
     {
-        vector<ChunkCoord> toRemove;
+        struct ChunkRemoval
+        {
+            ChunkCoord coord;
+            Chunk *chunk;
+        };
+        vector<ChunkRemoval> toRemove;
         enumeratekt(chunks, ChunkCoord, coord, Chunk*, chunk,
         {
             int dx = coord.x - playerChunk.x;
@@ -104,17 +109,19 @@ namespace game
             int adz = dz < 0 ? -dz : dz;
             if(adx > renderDistance || adz > renderDistance)
             {
-                toRemove.add(coord);
+                ChunkRemoval &removal = toRemove.add();
+                removal.coord = coord;
+                removal.chunk = chunk;
             }
         });
 
         loopv(toRemove)
         {
-            Chunk **c = chunks.access(toRemove[i]);
-            if(c && *c)
+            ChunkRemoval &removal = toRemove[i];
+            if(removal.chunk)
             {
-                delete *c;
-                chunks.remove(toRemove[i]);
+                delete removal.chunk;
+                chunks.remove(removal.coord);
             }
         }
     }

@@ -87,8 +87,6 @@ namespace game
 
     BlockType WorldGenerator::selectBlockType(int worldX, int worldY, int worldZ, BiomeType biome, double surfaceDistance, WorldLayer layer)
     {
-        const BiomeData &biomeData = BiomeManager::getBiome(biome);
-
         if(layer == LAYER_KITHGARD)
         {
             if(worldY <= WORLD_KITHGARD_MIN + 1) return BLOCK_BEDROCK;
@@ -457,12 +455,12 @@ namespace game
                 unsigned int columnSeed = seed ^ (unsigned int)(worldX * 374761393) ^ (unsigned int)(worldZ * 668265263);
 
                 BiomeType biome = chunk->getBiome(x, z);
-                const std::vector<VegetationType> &vegList = VegetationManager::getBiomeVegetation(biome);
+                const vector<VegetationType> &vegList = VegetationManager::getBiomeVegetation(biome);
 
                 if(!vegList.empty())
                 {
                     int topY = -1;
-                    for(int y = std::min(CHUNK_HEIGHT - 2, WORLD_SURFACE_MAX); y >= WORLD_CAVES_MAX; --y)
+                    for(int y = min(CHUNK_HEIGHT - 2, WORLD_SURFACE_MAX); y >= WORLD_CAVES_MAX; --y)
                     {
                         Block below = chunk->getBlock(x, y, z);
                         if(below.type == BLOCK_AIR || below.type == BLOCK_WATER) continue;
@@ -485,7 +483,7 @@ namespace game
                                     int attempts = 1 + (columnSeed % 3);
                                     for(int i = 0; i < attempts; ++i)
                                     {
-                                        VegetationType veg = vegList[(columnSeed + i * 1013904223u) % vegList.size()];
+                                        VegetationType veg = vegList[(columnSeed + i * 1013904223u) % vegList.length()];
                                         const VegetationData &vegData = VegetationManager::getVegetation(veg);
                                         if(targetY < vegData.minHeight || targetY > vegData.maxHeight) continue;
 
@@ -553,39 +551,56 @@ namespace game
                             double weird = noiseGen->getWeirdness(worldX, worldZ);
                             KithgardBiomeType kBiome = WorldLayerManager::selectKithgardBiome(humid, weird, (double)kTop);
 
-                            std::vector<VegetationType> kVeg;
+                            const VegetationType *kVeg = NULL;
+                            int kVegCount = 0;
+                            
+                            static const VegetationType forestVeg[] = {VEG_KITHGARD_MOSS, VEG_KITHGARD_VINE, VEG_ETHEREAL_PLANT, VEG_UNDERGROUND_FERN, VEG_UNDERGROUND_MUSHROOM_BLUE, VEG_GLOWING_MUSHROOM};
+                            static const VegetationType swampVeg[] = {VEG_KITHGARD_MOSS, VEG_UNDERGROUND_VINE, VEG_UNDERGROUND_MOSS, VEG_UNDERGROUND_FERN, VEG_LIMINAL_FLOWER};
+                            static const VegetationType waterVeg[] = {VEG_UNDERGROUND_VINE, VEG_UNDERGROUND_MOSS, VEG_FLOATING_SPORE, VEG_ETHEREAL_PLANT};
+                            static const VegetationType crystalVeg[] = {VEG_CRYSTAL_FLOWER, VEG_GLOWING_MUSHROOM, VEG_LIMINAL_FLOWER, VEG_FLOATING_SPORE};
+                            static const VegetationType mushroomVeg[] = {VEG_UNDERGROUND_MUSHROOM_BLUE, VEG_UNDERGROUND_MUSHROOM_PURPLE, VEG_GLOWING_MUSHROOM, VEG_UNDERGROUND_MOSS};
+                            static const VegetationType ruinsVeg[] = {VEG_KITHGARD_MOSS, VEG_KITHGARD_VINE, VEG_ETHEREAL_PLANT, VEG_FLOATING_SPORE};
+                            static const VegetationType defaultVeg[] = {VEG_KITHGARD_MOSS, VEG_UNDERGROUND_MOSS, VEG_UNDERGROUND_VINE, VEG_FLOATING_SPORE};
+                            
                             switch(kBiome)
                             {
                                 case KITHGARD_FOREST:
-                                    kVeg = {VEG_KITHGARD_MOSS, VEG_KITHGARD_VINE, VEG_ETHEREAL_PLANT, VEG_UNDERGROUND_FERN, VEG_UNDERGROUND_MUSHROOM_BLUE, VEG_GLOWING_MUSHROOM};
+                                    kVeg = forestVeg;
+                                    kVegCount = sizeof(forestVeg) / sizeof(VegetationType);
                                     break;
                                 case KITHGARD_SWAMP:
-                                    kVeg = {VEG_KITHGARD_MOSS, VEG_UNDERGROUND_VINE, VEG_UNDERGROUND_MOSS, VEG_UNDERGROUND_FERN, VEG_LIMINAL_FLOWER};
+                                    kVeg = swampVeg;
+                                    kVegCount = sizeof(swampVeg) / sizeof(VegetationType);
                                     break;
                                 case KITHGARD_LAKE:
                                 case KITHGARD_OCEAN:
-                                    kVeg = {VEG_UNDERGROUND_VINE, VEG_UNDERGROUND_MOSS, VEG_FLOATING_SPORE, VEG_ETHEREAL_PLANT};
+                                    kVeg = waterVeg;
+                                    kVegCount = sizeof(waterVeg) / sizeof(VegetationType);
                                     break;
                                 case KITHGARD_CRYSTAL_CAVES:
-                                    kVeg = {VEG_CRYSTAL_FLOWER, VEG_GLOWING_MUSHROOM, VEG_LIMINAL_FLOWER, VEG_FLOATING_SPORE};
+                                    kVeg = crystalVeg;
+                                    kVegCount = sizeof(crystalVeg) / sizeof(VegetationType);
                                     break;
                                 case KITHGARD_MUSHROOM_FOREST:
-                                    kVeg = {VEG_UNDERGROUND_MUSHROOM_BLUE, VEG_UNDERGROUND_MUSHROOM_PURPLE, VEG_GLOWING_MUSHROOM, VEG_UNDERGROUND_MOSS};
+                                    kVeg = mushroomVeg;
+                                    kVegCount = sizeof(mushroomVeg) / sizeof(VegetationType);
                                     break;
                                 case KITHGARD_RUINS:
-                                    kVeg = {VEG_KITHGARD_MOSS, VEG_KITHGARD_VINE, VEG_ETHEREAL_PLANT, VEG_FLOATING_SPORE};
+                                    kVeg = ruinsVeg;
+                                    kVegCount = sizeof(ruinsVeg) / sizeof(VegetationType);
                                     break;
                                 case KITHGARD_CATACOMBS:
                                 case KITHGARD_HALLS:
                                 case KITHGARD_VOID:
                                 default:
-                                    kVeg = {VEG_KITHGARD_MOSS, VEG_UNDERGROUND_MOSS, VEG_UNDERGROUND_VINE, VEG_FLOATING_SPORE};
+                                    kVeg = defaultVeg;
+                                    kVegCount = sizeof(defaultVeg) / sizeof(VegetationType);
                                     break;
                             }
 
-                            if(!kVeg.empty())
+                            if(kVeg && kVegCount > 0)
                             {
-                                VegetationType veg = kVeg[columnSeed % kVeg.size()];
+                                VegetationType veg = kVeg[columnSeed % kVegCount];
                                 const VegetationData &vegData = VegetationManager::getVegetation(veg);
                                 if(targetY >= vegData.minHeight && targetY <= vegData.maxHeight)
                                 {
@@ -652,8 +667,9 @@ namespace game
                     Block above = chunk->getBlock(x, plantY, z);
                     if(above.type == BLOCK_AIR)
                     {
-                        std::vector<VegetationType> skyVeg = {VEG_CLOUD_GRASS, VEG_SKY_FLOWER, VEG_LAPUTA_VINE, VEG_FLOATING_SPORE};
-                        VegetationType veg = skyVeg[columnSeed % skyVeg.size()];
+                        static const VegetationType skyVeg[] = {VEG_CLOUD_GRASS, VEG_SKY_FLOWER, VEG_LAPUTA_VINE, VEG_FLOATING_SPORE};
+                        static const int skyVegCount = sizeof(skyVeg) / sizeof(VegetationType);
+                        VegetationType veg = skyVeg[columnSeed % skyVegCount];
                         const VegetationData &vegData = VegetationManager::getVegetation(veg);
                         if(plantY >= vegData.minHeight && plantY <= vegData.maxHeight)
                         {

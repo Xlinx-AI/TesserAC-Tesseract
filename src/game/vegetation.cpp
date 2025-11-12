@@ -3,7 +3,14 @@
 namespace game
 {
     VegetationData VegetationManager::vegetation[VEG_COUNT];
-    std::vector<VegetationType> VegetationManager::biomeVegetation[BIOME_COUNT];
+    vector<VegetationType> VegetationManager::biomeVegetation[BIOME_COUNT];
+
+    template<int N>
+    static inline void assignVegetation(vector<VegetationType> &list, const VegetationType (&types)[N])
+    {
+        list.shrink(0);
+        loopi(N) list.add(types[i]);
+    }
 
     void VegetationManager::init()
     {
@@ -57,142 +64,211 @@ namespace game
 
         for(int i = 0; i < BIOME_COUNT; ++i)
         {
-            biomeVegetation[i].clear();
+            biomeVegetation[i].shrink(0);
         }
 
-        biomeVegetation[BIOME_PLAINS] = {
-            VEG_GRASS, VEG_TALL_GRASS, VEG_FLOWER_RED, VEG_FLOWER_YELLOW, VEG_FLOWER_BLUE,
-            VEG_FLOWER_WHITE, VEG_FERN, VEG_BERRY_BUSH, VEG_SHRUB, VEG_WHEAT_GRASS,
-            VEG_BUSH, VEG_LICHEN, VEG_MOSS
-        };
+        {
+            const VegetationType plains[] = {
+                VEG_GRASS, VEG_TALL_GRASS, VEG_FLOWER_RED, VEG_FLOWER_YELLOW, VEG_FLOWER_BLUE,
+                VEG_FLOWER_WHITE, VEG_FERN, VEG_BERRY_BUSH, VEG_SHRUB, VEG_WHEAT_GRASS,
+                VEG_BUSH, VEG_LICHEN, VEG_MOSS
+            };
+            assignVegetation(biomeVegetation[BIOME_PLAINS], plains);
+        }
 
-        biomeVegetation[BIOME_HILLS] = {
-            VEG_GRASS, VEG_TALL_GRASS, VEG_FERN, VEG_FLOWER_RED, VEG_FLOWER_BLUE,
-            VEG_FLOWER_WHITE, VEG_BERRY_BUSH, VEG_BUSH, VEG_LICHEN, VEG_MOSS,
-            VEG_SHRUB, VEG_WHEAT_GRASS, VEG_TALL_GRASS
-        };
+        {
+            const VegetationType hills[] = {
+                VEG_GRASS, VEG_TALL_GRASS, VEG_FERN, VEG_FLOWER_RED, VEG_FLOWER_BLUE,
+                VEG_FLOWER_WHITE, VEG_BERRY_BUSH, VEG_BUSH, VEG_LICHEN, VEG_MOSS,
+                VEG_SHRUB, VEG_WHEAT_GRASS, VEG_TALL_GRASS
+            };
+            assignVegetation(biomeVegetation[BIOME_HILLS], hills);
+        }
 
-        biomeVegetation[BIOME_TALL_GRASS_FIELDS] = {
-            VEG_GRASS, VEG_TALL_GRASS, VEG_FERN, VEG_FLOWER_RED, VEG_FLOWER_YELLOW,
-            VEG_FLOWER_BLUE, VEG_FLOWER_WHITE, VEG_WHEAT_GRASS, VEG_SHRUB, VEG_BERRY_BUSH,
-            VEG_BUSH, VEG_MOSS, VEG_LICHEN, VEG_FLOWER_BLUE
-        };
+        {
+            const VegetationType tallGrassFields[] = {
+                VEG_GRASS, VEG_TALL_GRASS, VEG_FERN, VEG_FLOWER_RED, VEG_FLOWER_YELLOW,
+                VEG_FLOWER_BLUE, VEG_FLOWER_WHITE, VEG_WHEAT_GRASS, VEG_SHRUB, VEG_BERRY_BUSH,
+                VEG_BUSH, VEG_MOSS, VEG_LICHEN, VEG_FLOWER_BLUE
+            };
+            assignVegetation(biomeVegetation[BIOME_TALL_GRASS_FIELDS], tallGrassFields);
+        }
 
-        biomeVegetation[BIOME_SAVANNA] = {
-            VEG_GRASS, VEG_SAVANNA_BUSH, VEG_TALL_GRASS, VEG_SHRUB, VEG_DEAD_BUSH,
-            VEG_FLOWER_YELLOW, VEG_FLOWER_RED, VEG_FLOWER_WHITE, VEG_BUSH,
-            VEG_MOSS, VEG_WHEAT_GRASS
-        };
+        {
+            const VegetationType savanna[] = {
+                VEG_GRASS, VEG_SAVANNA_BUSH, VEG_TALL_GRASS, VEG_SHRUB, VEG_DEAD_BUSH,
+                VEG_FLOWER_YELLOW, VEG_FLOWER_RED, VEG_FLOWER_WHITE, VEG_BUSH,
+                VEG_MOSS, VEG_WHEAT_GRASS
+            };
+            assignVegetation(biomeVegetation[BIOME_SAVANNA], savanna);
+        }
 
-        biomeVegetation[BIOME_DESERT] = {
-            VEG_CACTUS, VEG_DEAD_BUSH, VEG_DESERT_FLOWER, VEG_SAVANNA_BUSH, VEG_SHRUB,
-            VEG_LICHEN, VEG_BERRY_BUSH
-        };
+        {
+            const VegetationType desert[] = {
+                VEG_CACTUS, VEG_DEAD_BUSH, VEG_DESERT_FLOWER, VEG_SAVANNA_BUSH, VEG_SHRUB,
+                VEG_LICHEN, VEG_BERRY_BUSH
+            };
+            assignVegetation(biomeVegetation[BIOME_DESERT], desert);
+        }
 
-        biomeVegetation[BIOME_SWAMP] = {
-            VEG_GRASS, VEG_MOSS, VEG_LICHEN, VEG_REED, VEG_LILY_PAD, VEG_MUSHROOM_BROWN,
-            VEG_MUSHROOM_RED, VEG_SHRUB, VEG_BERRY_BUSH, VEG_BUSH, VEG_VINE,
-            VEG_BAMBOO, VEG_TALL_GRASS, VEG_FERN
-        };
+        {
+            const VegetationType swamp[] = {
+                VEG_GRASS, VEG_MOSS, VEG_LICHEN, VEG_REED, VEG_LILY_PAD, VEG_MUSHROOM_BROWN,
+                VEG_MUSHROOM_RED, VEG_SHRUB, VEG_BERRY_BUSH, VEG_BUSH, VEG_VINE,
+                VEG_BAMBOO, VEG_TALL_GRASS, VEG_FERN
+            };
+            assignVegetation(biomeVegetation[BIOME_SWAMP], swamp);
+        }
 
-        biomeVegetation[BIOME_MANGROVE_FOREST] = {
-            VEG_MANGROVE_ROOT, VEG_GRASS, VEG_MOSS, VEG_LICHEN, VEG_REED,
-            VEG_LILY_PAD, VEG_VINE, VEG_FERN, VEG_SHRUB, VEG_BERRY_BUSH,
-            VEG_BUSH, VEG_BAMBOO, VEG_JUNGLE_FLOWER, VEG_TALL_GRASS,
-            VEG_FLOWER_YELLOW, VEG_FLOWER_RED
-        };
+        {
+            const VegetationType mangroveForest[] = {
+                VEG_MANGROVE_ROOT, VEG_GRASS, VEG_MOSS, VEG_LICHEN, VEG_REED,
+                VEG_LILY_PAD, VEG_VINE, VEG_FERN, VEG_SHRUB, VEG_BERRY_BUSH,
+                VEG_BUSH, VEG_BAMBOO, VEG_JUNGLE_FLOWER, VEG_TALL_GRASS,
+                VEG_FLOWER_YELLOW, VEG_FLOWER_RED
+            };
+            assignVegetation(biomeVegetation[BIOME_MANGROVE_FOREST], mangroveForest);
+        }
 
-        biomeVegetation[BIOME_FOREST] = {
-            VEG_GRASS, VEG_TALL_GRASS, VEG_FERN, VEG_FLOWER_RED, VEG_FLOWER_BLUE,
-            VEG_FLOWER_WHITE, VEG_FLOWER_YELLOW, VEG_BERRY_BUSH, VEG_BUSH,
-            VEG_SHRUB, VEG_MUSHROOM_RED, VEG_MUSHROOM_BROWN, VEG_LICHEN,
-            VEG_MOSS, VEG_WHEAT_GRASS
-        };
+        {
+            const VegetationType forest[] = {
+                VEG_GRASS, VEG_TALL_GRASS, VEG_FERN, VEG_FLOWER_RED, VEG_FLOWER_BLUE,
+                VEG_FLOWER_WHITE, VEG_FLOWER_YELLOW, VEG_BERRY_BUSH, VEG_BUSH,
+                VEG_SHRUB, VEG_MUSHROOM_RED, VEG_MUSHROOM_BROWN, VEG_LICHEN,
+                VEG_MOSS, VEG_WHEAT_GRASS
+            };
+            assignVegetation(biomeVegetation[BIOME_FOREST], forest);
+        }
 
-        biomeVegetation[BIOME_BIRCH_FOREST] = {
-            VEG_GRASS, VEG_TALL_GRASS, VEG_FERN, VEG_FLOWER_RED, VEG_FLOWER_BLUE,
-            VEG_FLOWER_WHITE, VEG_FLOWER_YELLOW, VEG_BERRY_BUSH, VEG_BUSH,
-            VEG_SHRUB, VEG_MUSHROOM_RED, VEG_MUSHROOM_BROWN, VEG_LICHEN,
-            VEG_MOSS, VEG_WHEAT_GRASS, VEG_FLOWER_WHITE
-        };
+        {
+            const VegetationType birchForest[] = {
+                VEG_GRASS, VEG_TALL_GRASS, VEG_FERN, VEG_FLOWER_RED, VEG_FLOWER_BLUE,
+                VEG_FLOWER_WHITE, VEG_FLOWER_YELLOW, VEG_BERRY_BUSH, VEG_BUSH,
+                VEG_SHRUB, VEG_MUSHROOM_RED, VEG_MUSHROOM_BROWN, VEG_LICHEN,
+                VEG_MOSS, VEG_WHEAT_GRASS, VEG_FLOWER_WHITE
+            };
+            assignVegetation(biomeVegetation[BIOME_BIRCH_FOREST], birchForest);
+        }
 
-        biomeVegetation[BIOME_LONG_TREE_FOREST] = {
-            VEG_GRASS, VEG_TALL_GRASS, VEG_FERN, VEG_FLOWER_RED, VEG_FLOWER_BLUE,
-            VEG_FLOWER_WHITE, VEG_BERRY_BUSH, VEG_BUSH, VEG_SHRUB, VEG_MOSS,
-            VEG_LICHEN, VEG_MUSHROOM_RED, VEG_MUSHROOM_BROWN, VEG_BAMBOO,
-            VEG_VINE, VEG_JUNGLE_FLOWER, VEG_WHEAT_GRASS
-        };
+        {
+            const VegetationType longTreeForest[] = {
+                VEG_GRASS, VEG_TALL_GRASS, VEG_FERN, VEG_FLOWER_RED, VEG_FLOWER_BLUE,
+                VEG_FLOWER_WHITE, VEG_BERRY_BUSH, VEG_BUSH, VEG_SHRUB, VEG_MOSS,
+                VEG_LICHEN, VEG_MUSHROOM_RED, VEG_MUSHROOM_BROWN, VEG_BAMBOO,
+                VEG_VINE, VEG_JUNGLE_FLOWER, VEG_WHEAT_GRASS
+            };
+            assignVegetation(biomeVegetation[BIOME_LONG_TREE_FOREST], longTreeForest);
+        }
 
-        biomeVegetation[BIOME_DARK_FOREST] = {
-            VEG_GRASS, VEG_MOSS, VEG_LICHEN, VEG_MUSHROOM_RED, VEG_MUSHROOM_BROWN,
-            VEG_UNDERGROUND_MOSS, VEG_UNDERGROUND_MUSHROOM_BLUE, VEG_UNDERGROUND_MUSHROOM_PURPLE,
-            VEG_UNDERGROUND_VINE, VEG_UNDERGROUND_FERN, VEG_GLOWING_MUSHROOM,
-            VEG_BERRY_BUSH, VEG_BUSH, VEG_SHRUB
-        };
+        {
+            const VegetationType darkForest[] = {
+                VEG_GRASS, VEG_MOSS, VEG_LICHEN, VEG_MUSHROOM_RED, VEG_MUSHROOM_BROWN,
+                VEG_UNDERGROUND_MOSS, VEG_UNDERGROUND_MUSHROOM_BLUE, VEG_UNDERGROUND_MUSHROOM_PURPLE,
+                VEG_UNDERGROUND_VINE, VEG_UNDERGROUND_FERN, VEG_GLOWING_MUSHROOM,
+                VEG_BERRY_BUSH, VEG_BUSH, VEG_SHRUB
+            };
+            assignVegetation(biomeVegetation[BIOME_DARK_FOREST], darkForest);
+        }
 
-        biomeVegetation[BIOME_TAIGA] = {
-            VEG_GRASS, VEG_TALL_GRASS, VEG_FERN, VEG_TUNDRA_GRASS, VEG_MOSS,
-            VEG_LICHEN, VEG_BERRY_BUSH, VEG_SHRUB, VEG_FLOWER_WHITE, VEG_FLOWER_BLUE,
-            VEG_BUSH, VEG_WHEAT_GRASS
-        };
+        {
+            const VegetationType taiga[] = {
+                VEG_GRASS, VEG_TALL_GRASS, VEG_FERN, VEG_TUNDRA_GRASS, VEG_MOSS,
+                VEG_LICHEN, VEG_BERRY_BUSH, VEG_SHRUB, VEG_FLOWER_WHITE, VEG_FLOWER_BLUE,
+                VEG_BUSH, VEG_WHEAT_GRASS
+            };
+            assignVegetation(biomeVegetation[BIOME_TAIGA], taiga);
+        }
 
-        biomeVegetation[BIOME_TUNDRA] = {
-            VEG_TUNDRA_GRASS, VEG_ICE_FLOWER, VEG_MOSS, VEG_LICHEN, VEG_SHRUB,
-            VEG_BERRY_BUSH, VEG_FLOWER_WHITE, VEG_FLOWER_BLUE, VEG_FLOWER_RED
-        };
+        {
+            const VegetationType tundra[] = {
+                VEG_TUNDRA_GRASS, VEG_ICE_FLOWER, VEG_MOSS, VEG_LICHEN, VEG_SHRUB,
+                VEG_BERRY_BUSH, VEG_FLOWER_WHITE, VEG_FLOWER_BLUE, VEG_FLOWER_RED
+            };
+            assignVegetation(biomeVegetation[BIOME_TUNDRA], tundra);
+        }
 
-        biomeVegetation[BIOME_MESA] = {
-            VEG_CACTUS, VEG_DEAD_BUSH, VEG_DESERT_FLOWER, VEG_SAVANNA_BUSH,
-            VEG_SHRUB, VEG_LICHEN, VEG_BERRY_BUSH
-        };
+        {
+            const VegetationType mesa[] = {
+                VEG_CACTUS, VEG_DEAD_BUSH, VEG_DESERT_FLOWER, VEG_SAVANNA_BUSH,
+                VEG_SHRUB, VEG_LICHEN, VEG_BERRY_BUSH
+            };
+            assignVegetation(biomeVegetation[BIOME_MESA], mesa);
+        }
 
-        biomeVegetation[BIOME_OCEAN] = {
-            VEG_SEAWEED, VEG_KELP, VEG_CORAL, VEG_REED, VEG_LILY_PAD
-        };
+        {
+            const VegetationType ocean[] = {
+                VEG_SEAWEED, VEG_KELP, VEG_CORAL, VEG_REED, VEG_LILY_PAD
+            };
+            assignVegetation(biomeVegetation[BIOME_OCEAN], ocean);
+        }
 
-        biomeVegetation[BIOME_DEEP_OCEAN] = {
-            VEG_SEAWEED, VEG_KELP, VEG_CORAL
-        };
+        {
+            const VegetationType deepOcean[] = {
+                VEG_SEAWEED, VEG_KELP, VEG_CORAL
+            };
+            assignVegetation(biomeVegetation[BIOME_DEEP_OCEAN], deepOcean);
+        }
 
-        biomeVegetation[BIOME_REEF] = {
-            VEG_CORAL, VEG_SEAWEED, VEG_KELP, VEG_REED, VEG_LILY_PAD,
-            VEG_MANGROVE_ROOT
-        };
+        {
+            const VegetationType reef[] = {
+                VEG_CORAL, VEG_SEAWEED, VEG_KELP, VEG_REED, VEG_LILY_PAD,
+                VEG_MANGROVE_ROOT
+            };
+            assignVegetation(biomeVegetation[BIOME_REEF], reef);
+        }
 
-        biomeVegetation[BIOME_LAKE] = {
-            VEG_GRASS, VEG_REED, VEG_LILY_PAD, VEG_SEAWEED, VEG_MOSS,
-            VEG_LICHEN, VEG_FERN, VEG_FLOWER_BLUE, VEG_FLOWER_WHITE,
-            VEG_SHRUB, VEG_BERRY_BUSH, VEG_BUSH
-        };
+        {
+            const VegetationType lake[] = {
+                VEG_GRASS, VEG_REED, VEG_LILY_PAD, VEG_SEAWEED, VEG_MOSS,
+                VEG_LICHEN, VEG_FERN, VEG_FLOWER_BLUE, VEG_FLOWER_WHITE,
+                VEG_SHRUB, VEG_BERRY_BUSH, VEG_BUSH
+            };
+            assignVegetation(biomeVegetation[BIOME_LAKE], lake);
+        }
 
-        biomeVegetation[BIOME_RIVER] = {
-            VEG_REED, VEG_LILY_PAD, VEG_GRASS, VEG_FERN, VEG_MOSS,
-            VEG_LICHEN, VEG_SHRUB, VEG_BERRY_BUSH, VEG_BUSH, VEG_FLOWER_RED,
-            VEG_FLOWER_YELLOW
-        };
+        {
+            const VegetationType river[] = {
+                VEG_REED, VEG_LILY_PAD, VEG_GRASS, VEG_FERN, VEG_MOSS,
+                VEG_LICHEN, VEG_SHRUB, VEG_BERRY_BUSH, VEG_BUSH, VEG_FLOWER_RED,
+                VEG_FLOWER_YELLOW
+            };
+            assignVegetation(biomeVegetation[BIOME_RIVER], river);
+        }
 
-        biomeVegetation[BIOME_SMALL_MOUNTAINS] = {
-            VEG_GRASS, VEG_TALL_GRASS, VEG_FERN, VEG_FLOWER_RED,
-            VEG_FLOWER_BLUE, VEG_FLOWER_WHITE, VEG_BERRY_BUSH, VEG_BUSH,
-            VEG_SHRUB, VEG_MOSS, VEG_LICHEN
-        };
+        {
+            const VegetationType smallMountains[] = {
+                VEG_GRASS, VEG_TALL_GRASS, VEG_FERN, VEG_FLOWER_RED,
+                VEG_FLOWER_BLUE, VEG_FLOWER_WHITE, VEG_BERRY_BUSH, VEG_BUSH,
+                VEG_SHRUB, VEG_MOSS, VEG_LICHEN
+            };
+            assignVegetation(biomeVegetation[BIOME_SMALL_MOUNTAINS], smallMountains);
+        }
 
-        biomeVegetation[BIOME_MEDIUM_MOUNTAINS] = {
-            VEG_GRASS, VEG_TALL_GRASS, VEG_FERN, VEG_FLOWER_WHITE,
-            VEG_FLOWER_BLUE, VEG_TUNDRA_GRASS, VEG_MOSS, VEG_LICHEN,
-            VEG_BERRY_BUSH, VEG_SHRUB
-        };
+        {
+            const VegetationType mediumMountains[] = {
+                VEG_GRASS, VEG_TALL_GRASS, VEG_FERN, VEG_FLOWER_WHITE,
+                VEG_FLOWER_BLUE, VEG_TUNDRA_GRASS, VEG_MOSS, VEG_LICHEN,
+                VEG_BERRY_BUSH, VEG_SHRUB
+            };
+            assignVegetation(biomeVegetation[BIOME_MEDIUM_MOUNTAINS], mediumMountains);
+        }
 
-        biomeVegetation[BIOME_TALL_MOUNTAINS] = {
-            VEG_TUNDRA_GRASS, VEG_ICE_FLOWER, VEG_MOSS, VEG_LICHEN,
-            VEG_SHRUB, VEG_BERRY_BUSH, VEG_FLOWER_WHITE
-        };
+        {
+            const VegetationType tallMountains[] = {
+                VEG_TUNDRA_GRASS, VEG_ICE_FLOWER, VEG_MOSS, VEG_LICHEN,
+                VEG_SHRUB, VEG_BERRY_BUSH, VEG_FLOWER_WHITE
+            };
+            assignVegetation(biomeVegetation[BIOME_TALL_MOUNTAINS], tallMountains);
+        }
 
-        biomeVegetation[BIOME_HIGH_MOUNTAIN_FOREST] = {
-            VEG_GRASS, VEG_TALL_GRASS, VEG_FERN, VEG_FLOWER_WHITE,
-            VEG_FLOWER_BLUE, VEG_TUNDRA_GRASS, VEG_MOSS, VEG_LICHEN,
-            VEG_BERRY_BUSH, VEG_SHRUB
-        };
+        {
+            const VegetationType highMountainForest[] = {
+                VEG_GRASS, VEG_TALL_GRASS, VEG_FERN, VEG_FLOWER_WHITE,
+                VEG_FLOWER_BLUE, VEG_TUNDRA_GRASS, VEG_MOSS, VEG_LICHEN,
+                VEG_BERRY_BUSH, VEG_SHRUB
+            };
+            assignVegetation(biomeVegetation[BIOME_HIGH_MOUNTAIN_FOREST], highMountainForest);
+        }
     }
 
     const VegetationData& VegetationManager::getVegetation(VegetationType type)
@@ -200,7 +276,7 @@ namespace game
         return vegetation[type];
     }
 
-    const std::vector<VegetationType>& VegetationManager::getBiomeVegetation(BiomeType biome)
+    const vector<VegetationType>& VegetationManager::getBiomeVegetation(BiomeType biome)
     {
         return biomeVegetation[biome];
     }
