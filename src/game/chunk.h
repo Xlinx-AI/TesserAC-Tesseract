@@ -7,7 +7,7 @@
 namespace game
 {
     static const int CHUNK_SIZE = 16;
-    static const int CHUNK_HEIGHT = 256;
+    static const int CHUNK_HEIGHT = 2048;
     static const int CHUNK_VOLUME = CHUNK_SIZE * CHUNK_SIZE * CHUNK_HEIGHT;
 
     enum BlockType
@@ -29,6 +29,17 @@ namespace game
         BLOCK_DIAMOND_ORE,
         BLOCK_CLAY,
         BLOCK_BEDROCK,
+        BLOCK_FLOATSTONE,
+        BLOCK_SKY_DIRT,
+        BLOCK_SKY_GRASS,
+        BLOCK_VEGETATION,
+        BLOCK_KITHGARD_STONE,
+        BLOCK_KITHGARD_SOIL,
+        BLOCK_KITHGARD_WATER,
+        BLOCK_KITHGARD_GLOWSTONE,
+        BLOCK_KITHGARD_CRYSTAL,
+        BLOCK_KITHGARD_METAL,
+        BLOCK_KITHGARD_CLOUD,
         BLOCK_COUNT
     };
 
