@@ -46,7 +46,7 @@ endif
 CLIENT_INCLUDES= $(INCLUDES) -Iinclude
 STD_LIBS= -static-libgcc -static-libstdc++
 CLIENT_LIBS= -mwindows $(STD_LIBS) -L$(WINBIN) -L$(WINLIB) -lSDL2 -lSDL2_image -lSDL2_mixer -lzlib1 -lopengl32 -lenet -lws2_32 -lwinmm
-else	
+else    
 CLIENT_INCLUDES= $(INCLUDES) -I/usr/X11R6/include `sdl2-config --cflags`
 CLIENT_LIBS= -Lenet -lenet -L/usr/X11R6/lib -lX11 `sdl2-config --libs` -lSDL2_image -lSDL2_mixer -lz -lGL
 endif
@@ -68,7 +68,7 @@ CLIENT_OBJS= \
 	engine/aa.o \
 	engine/bih.o \
 	engine/blend.o \
-	engine/client.o	\
+	engine/client.o    \
 	engine/command.o \
 	engine/console.o \
 	engine/dynlight.o \
@@ -78,7 +78,7 @@ CLIENT_OBJS= \
 	engine/material.o \
 	engine/menus.o \
 	engine/movie.o \
-	engine/normal.o	\
+	engine/normal.o    \
 	engine/octa.o \
 	engine/octaedit.o \
 	engine/octarender.o \
@@ -91,7 +91,7 @@ CLIENT_OBJS= \
 	engine/rendersky.o \
 	engine/rendertext.o \
 	engine/renderva.o \
-	engine/server.o	\
+	engine/server.o    \
 	engine/serverbrowser.o \
 	engine/shader.o \
 	engine/sound.o \
@@ -109,7 +109,14 @@ CLIENT_OBJS= \
 	game/scoreboard.o \
 	game/server.o \
 	game/waypoint.o \
-	game/weapon.o
+	game/weapon.o \
+	game/noise.o \
+	game/biome.o \
+	game/chunk.o \
+	game/marchingcubes.o \
+	game/worldgen.o \
+	game/voxelworld.o \
+	game/minecraft_integration.o
 
 CLIENT_PCH= shared/cube.h.gch engine/engine.h.gch game/game.h.gch
 
@@ -191,10 +198,10 @@ master: $(MASTER_OBJS)
 
 install: all
 else
-client:	libenet $(CLIENT_OBJS)
+client:    libenet $(CLIENT_OBJS)
 	$(CXX) $(CXXFLAGS) -o tess_client $(CLIENT_OBJS) $(CLIENT_LIBS)
 
-server:	libenet $(SERVER_OBJS)
+server:    libenet $(SERVER_OBJS)
 	$(CXX) $(CXXFLAGS) -o tess_server $(SERVER_OBJS) $(SERVER_LIBS)  
 	
 master: libenet $(MASTER_OBJS)
@@ -207,8 +214,8 @@ tessfont: shared/tessfont.o
 	$(CXX) $(CXXFLAGS) -o tessfont shared/tessfont.o `freetype-config --libs` -lz
 
 install: all
-	cp -f tess_client	../bin_unix/$(PLATFORM_PREFIX)_client
-	cp -f tess_server	../bin_unix/$(PLATFORM_PREFIX)_server
+	cp -f tess_client    ../bin_unix/$(PLATFORM_PREFIX)_client
+	cp -f tess_server    ../bin_unix/$(PLATFORM_PREFIX)_server
 ifneq (,$(STRIP))
 	$(STRIP) ../bin_unix/$(PLATFORM_PREFIX)_client
 	$(STRIP) ../bin_unix/$(PLATFORM_PREFIX)_server
