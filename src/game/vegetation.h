@@ -74,12 +74,12 @@ namespace game
     {
     private:
         static VegetationData vegetation[VEG_COUNT];
-        static std::vector<VegetationType> biomeVegetation[BIOME_COUNT];
+        static vector<VegetationType> biomeVegetation[BIOME_COUNT];
         
     public:
         static void init();
         static const VegetationData& getVegetation(VegetationType type);
-        static const std::vector<VegetationType>& getBiomeVegetation(BiomeType biome);
+        static const vector<VegetationType>& getBiomeVegetation(BiomeType biome);
         static const char* getVegetationName(VegetationType type);
     };
 }
